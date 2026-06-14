@@ -21,36 +21,41 @@ btn.pack(side=tk.LEFT)
 
 def get_answer(question):
     question = question.lower()
+    words = question.split()
 
-    #Жанр
-
+    # Найти игру
+    matched_game = None
     for game in games:
-        if game.lower() in question and "жанр" in question:
-            for _, target, data in G.edges(game, data=True):
-                if data ['relation'] == 'жанр':
-                    return f"Жанр {game}: {target}"
-                
-    #Разработчик
+        if any(word in game.lower() for word in words):
+            matched_game = game
+            break
 
-    for game in games:
-        if game.lower() in question and "разработчик" in question:
-            for _, target, data in G.edges(game, data=True):
-                if data ['relation'] == 'разработчик':
-                    return f"{game} разработала: {target}"
-                
-    #Платформа
+    if not matched_game:
+        return "Не знаю такую игру."
 
-    for game in games:
-        if game.lower() in question and "платформа" in question:
-            platforms = []
-            for _, target, data in G.edges(game, data=True):
-                if data ['relation'] == 'платформа':
-                    platforms.append(target)
-            if platforms:
-                    return f"{game} на: {', '.join(platforms)}"
-                
+   # Разработчик
+    if "разработчик" in question:
+        for _, target, data in G.edges(matched_game, data=True):
+            rel = data.get('relation', '')
+            if 'разработчик' in rel:
+                return f"{matched_game} разработала: {target}"
 
-    return "Не понял. Спроси про жанр, разработчика или платформы"
+    # Жанр
+    if "жанр" in question:
+        for _, target, data in G.edges(matched_game, data=True):
+            if data['relation'] == 'жанр':
+                return f"Жанр {matched_game}: {target}"
+
+    # Платформы
+    if "платформ" in question:
+        platforms = []
+        for _, target, data in G.edges(matched_game, data=True):
+            if data['relation'] == 'платформа':
+                platforms.append(target)
+        if platforms:
+            return f"{matched_game} на: {', '.join(platforms)}"
+
+    return "Не понял."
 
 def ask():
     question = entry.get().lower()

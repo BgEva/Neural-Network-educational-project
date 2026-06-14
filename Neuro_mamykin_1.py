@@ -83,22 +83,28 @@ G = nx.DiGraph()
 games = ["Nier Automata", "Final Fantasy VII", "Zelda Breath of the Wild", "Monster Hunter World", "Resident Evil 2"]
 G.add_nodes_from(games)
 
+#жанр
 G.add_edge("Nier Automata", "Action RPG", relation="жанр")
 G.add_edge("Final Fantasy VII", "JRPG", relation="жанр")
 G.add_edge("Zelda Breath of the Wild", "Action-Adventure", relation="жанр")
 G.add_edge("Monster Hunter World", "Action RPG", relation="жанр")
 G.add_edge("Resident Evil 2", "Survival Horror", relation="жанр")
 
-G.add_edge("Nier Automata", "Platinum games", relation="разработчик")
-G.add_edge("Final Fantasy VII", "Square Enix", relation="разработчик")
-G.add_edge("Zelda Breath of the Wild", "Nintendo", relation="разработчик")
-G.add_edge("Monster Hunter World", "Capcom", relation="разработчик")
-G.add_edge("Resident Evil 2", "Capcom", relation="разработчик")
 
+# Разработчик/издатель (одна компания)
+G.add_edge("Final Fantasy VII", "Square Enix", relation="разработчик/издатель")
+G.add_edge("Zelda Breath of the Wild", "Nintendo", relation="разработчик/издатель")
+G.add_edge("Monster Hunter World", "Capcom", relation="разработчик/издатель")
+G.add_edge("Resident Evil 2", "Capcom", relation="разработчик/издатель")
+G.add_edge("Nier Automata", "Platinum games", relation="разработчик")
+G.add_edge("Nier Automata", "Square Enix", relation="издатель")
+
+#платформа
 G.add_edge("Nier Automata", "PC", relation="платформа")
 G.add_edge("Nier Automata", "PlayStation 4", relation="платформа")
 G.add_edge("Nier Automata", "Xbox One", relation="платформа")
 G.add_edge("Nier Automata", "Nintendo Switch", relation="платформа")
+
 
 G.add_edge("Final Fantasy VII", "PlayStation", relation="платформа")
 G.add_edge("Final Fantasy VII", "PlayStation 4", relation="платформа")
@@ -120,15 +126,19 @@ G.add_edge("Resident Evil 2", "Xbox series X/S", relation="платформа")
 G.add_edge("Resident Evil 2", "Nintendo switch", relation="платформа")
 G.add_edge("Resident Evil 2", "PC", relation="платформа")
 
+
+#год
 G.add_edge("Nier Automata", "2017", relation="год")
 G.add_edge("Final Fantasy VII", "1997", relation="год")
 G.add_edge("Zelda Breath of the Wild", "2017", relation="год")
 G.add_edge("Monster Hunter World", "2018", relation="год")
 G.add_edge("Resident Evil 2", "2019", relation="год")
 
+#серия
 G.add_edge("Nier Automata", "Nier", relation="серия")
 G.add_edge("Nier Automata", "Drakengard", relation="серия")
 G.add_edge("Nier Automata", "Drag-on Dragoon", relation="серия")
+
 
 G.add_edge("Final Fantasy VII", "Final Fantasy", relation="серия")
 G.add_edge("Zelda Breath of the Wild", "The Legend of Zelda", relation="серия")
@@ -137,12 +147,7 @@ G.add_edge("Monster Hunter World", "Monster Hunter", relation="серия")
 G.add_edge("Resident Evil 2", "Resident Evil", relation="серия")
 G.add_edge("Resident Evil 2", "Biohazard", relation="серия")
 
-G.add_edge("Nier Automata", "Square Enix", relation="издатель")
-G.add_edge("Final Fantasy VII", "Square Enix", relation="издатель")
-G.add_edge("Zelda Breath of the Wild", "Nintendo", relation="издатель")
-G.add_edge("Monster Hunter World", "Capcom", relation="издатель")
-G.add_edge("Resident Evil 2", "Capcom", relation="издатель")
-
+#движок
 G.add_edge("Nier Automata", "Platinum Engine", relation="движок")
 G.add_edge("Final Fantasy VII", "Square Engine", relation="движок")
 G.add_edge("Zelda Breath of the Wild", "Havok", relation="движок")
