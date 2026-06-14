@@ -54,6 +54,37 @@ def get_answer(question):
                 platforms.append(target)
         if platforms:
             return f"{matched_game} на: {', '.join(platforms)}"
+        
+
+    # Издатель
+    if "издатель" in question:
+        for _, target, data in G.edges(matched_game, data=True):
+            rel = data.get('relation', '')
+            if 'издатель' in rel:
+                return f"{matched_game} издала: {target}"
+            
+    # год
+    if "год" in question:
+        for _, target, data in G.edges(matched_game, data=True):
+            if data['relation'] == 'год':
+                return f"{matched_game} вышла в {target} году"
+            
+    # Серия
+    if "серия" in question:
+        series = []
+        for _, target, data in G.edges(matched_game, data=True):
+            if data['relation'] == 'серия':
+                series.append(target)
+        if series:
+            return f"{matched_game} относится к серии: {', '.join(series)}"
+        
+    # Движок
+    if "движок" in question:
+        for _, target, data in G.edges(matched_game, data=True):
+            if data['relation'] == 'движок':
+                return f"{matched_game} была разработана на движке {target}"
+
+
 
     return "Не понял."
 
