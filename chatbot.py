@@ -23,7 +23,6 @@ def get_answer(question):
     question = question.lower()
     words = question.split()
 
-    # Найти игру
     matched_game = None
     for game in games:
         if any(word in game.lower() for word in words):
@@ -33,46 +32,35 @@ def get_answer(question):
     if not matched_game:
         return "Не знаю такую игру."
 
-    # Один проход по всем связям
-    genres = []
-    developers = []
-    platforms = []
-    publishers = []
-    years = []
-    series_list = []
-    engines = []
+    buckets = {
+        'жанр': [],
+        'разработчик': [],
+        'платформа': [],
+        'издатель': [],
+        'год': [],
+        'серия': [],
+        'движок': [],
+    }
 
     for _, target, data in G.edges(matched_game, data=True):
         rel = data['relation']
-        if rel == 'жанр':
-            genres.append(target)
-        if 'разработчик' in rel:
-            developers.append(target)
-        if rel == 'платформа':
-            platforms.append(target)
-        if 'издатель' in rel:
-            publishers.append(target)
-        if rel == 'год':
-            years.append(target)
-        if rel == 'серия':
-            series_list.append(target)
-        if rel == 'движок':
-            engines.append(target)
+        for key in buckets:
+            if key in rel:
+                buckets[key].append(target)
 
-    if "разработчик" in question and developers:
-        return f"{matched_game} разработала: {', '.join(developers)}"
-    if "жанр" in question and genres:
-        return f"Жанр {matched_game}: {', '.join(genres)}"
-    if "платформ" in question and platforms:
-        return f"{matched_game} на: {', '.join(platforms)}"
-    if "издатель" in question and publishers:
-        return f"Издатель {matched_game}: {', '.join(publishers)}"
-    if "год" in question and years:
-        return f"{matched_game} вышла в {', '.join(years)} году"
-    if "сери" in question and series_list:
-        return f"{matched_game} относится к серии: {', '.join(series_list)}"
-    if "движок" in question and engines:
-        return f"{matched_game} на движке: {', '.join(engines)}"
+    labels = {
+        "жанр": ("жанр", buckets['жанр']),
+        "разработчик": ("разработала", buckets['разработчик']),
+        "платформ": ("на", buckets['платформа']),
+        "издатель": ("издатель", buckets['издатель']),
+        "год": ("вышла в", buckets['год']),
+        "сери": ("серия", buckets['серия']),
+        "движок": ("движок", buckets['движок']),
+    }
+
+    for word, (label, items) in labels.items():
+        if word in question and items:
+            return f"{matched_game} {label}: {', '.join(items)}"
 
     return "Не понял."
 
