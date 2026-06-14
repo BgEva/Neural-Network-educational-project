@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext
 from Neuro_mamykin_1 import G, games
+import random
 
 # Создаём окно
 window = tk.Tk()
@@ -48,19 +49,49 @@ def get_answer(question):
             if key in rel:
                 buckets[key].append(target)
 
-    labels = {
-        "жанр": ("жанр", buckets['жанр']),
-        "разработчик": ("разработала", buckets['разработчик']),
-        "платформ": ("на", buckets['платформа']),
-        "издатель": ("издатель", buckets['издатель']),
-        "год": ("вышла в", buckets['год']),
-        "сери": ("серия", buckets['серия']),
-        "движок": ("движок", buckets['движок']),
+    templates = {
+        "жанр": [
+            "{} — это {}", 
+            "{} относится к жанру {}", 
+            "Я бы сказал, что {} это {}"
+        ],
+        "разработчик": [
+            "{} создала студия {}",
+            "{} разработала {}",
+            "Над {} работали {}"
+        ],
+        "платформ": [
+            "{} вышла на {}",
+            "{} доступна на {}",
+            "В {} можно поиграть на {}"
+        ],
+        "издатель": [
+            "{} издала {}",
+            "Издатель {} — {}",
+            "{} выпустила в свет {}"
+        ],
+        "год": [
+            "{} вышла в {} году",
+            "Релиз {} состоялся в {}",
+            "{} увидела свет в {}"
+        ],
+        "сери": [
+            "{} входит в серию {}",
+            "{} — часть франшизы {}",
+            "{} относится к серии игр {}"
+        ],
+        "движок": [
+            "{} работает на движке {}",
+            "{} использует {}",
+            "Движок {} — {}"
+        ],
     }
 
-    for word, (label, items) in labels.items():
-        if word in question and items:
-            return f"{matched_game} {label}: {', '.join(items)}"
+    for word, t_list in templates.items():
+        if word in question and buckets[word if word != "платформ" else "платформа"]:
+            items = buckets[word if word != "платформ" else "платформа"]
+            template = random.choice(t_list)
+            return template.format(matched_game, ', '.join(items))
 
     return "Не понял."
 
