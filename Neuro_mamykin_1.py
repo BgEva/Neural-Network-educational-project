@@ -3,9 +3,21 @@ import torch.nn as nn
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-import math
 
-# 12 признаков
+# 12 признаков. Ответ: 1 = да, 0 = нет
+# [0]  Открытый мир?
+# [1]  Прокачка (RPG)?
+# [2]  Мультиплеер?
+# [3]  Реалистичная графика?
+# [4]  Фэнтези?
+# [5]  Научная фантастика?
+# [6]  Герой — человек?
+# [7]  Бой в реальном времени?
+# [8]  Хоррор?
+# [9]  JRPG?
+# [10] Крафт/сбор ресурсов?
+# [11] Одиночная игра?
+
 nier_automata = [1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1]
 final_fantasy_7 = [1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1]
 zelda_botw = [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1]
@@ -51,6 +63,9 @@ for epoch in range(500):
     optimizer.step()
     if (epoch + 1) % 100 == 0:
         print(f"Эпоха {epoch+1}/500, ошибка: {loss.item():.4f}")
+
+torch.save(model.state_dict(), "game_net.pth")
+print("Модель сохранена в game_net.pth")
 
 # ===== ГРАФ =====
 G = nx.DiGraph()
