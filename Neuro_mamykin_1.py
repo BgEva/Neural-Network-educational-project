@@ -57,6 +57,23 @@ G = nx.DiGraph()
 games = ["Nier Automata", "Final Fantasy VII", "Zelda Breath of the Wild", "Monster Hunter World", "Resident Evil 2"]
 G.add_nodes_from(games)
 
+all_nodes = ["Action RPG", "JRPG", "Action-Adventure", "Survival Horror",
+             "RPG", "Horror", "Adventure", "Action", "Жанр",
+             "Экшен", "Японская RPG", "Ужасы", "Приключенческий экшен",
+             "Platinum games", "Square Enix", "Nintendo", "Capcom", "Разработчик",
+             "PC", "PlayStation", "PlayStation 4", "PlayStation 5",
+             "Xbox", "Xbox One", "Xbox series X/S", "Nintendo Switch", "Wii u", "Платформа",
+             "Сюжет", "Геймплей", "Саундтрек", "Система материи",
+             "Открытый мир", "Система готовки", "Охота", "Крафт брони",
+             "Зомби", "Убежище",
+             "Персонаж 2B", "Персонаж Клауд", "Персонаж Линк", "Персонаж Леон",
+             "2017", "1997", "2018", "2019",
+             "Nier", "Drakengard", "Drag-on Dragoon",
+             "Final Fantasy", "The Legend of Zelda", "Monster Hunter", "Resident Evil", "Biohazard",
+             "Platinum Engine", "Square Engine", "Havok", "MT Framework", "RE Engine"]
+
+G.add_nodes_from(all_nodes)
+
 # Жанры
 G.add_edge("Nier Automata", "Action RPG", relation="жанр")
 G.add_edge("Final Fantasy VII", "JRPG", relation="жанр")
