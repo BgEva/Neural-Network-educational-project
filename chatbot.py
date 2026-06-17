@@ -3,6 +3,8 @@ from tkinter import scrolledtext
 from Neuro_mamykin_1 import G, games
 import random
 
+context = {"last_game": None}
+
 # Создаём окно
 window = tk.Tk()
 window.title("Game Chatbot")
@@ -30,7 +32,30 @@ def get_answer(question):
             matched_game = game
             break
 
+    context_triggers = ["жанр", "разработчик", "платформ", "издатель", "год", "сери", "движок"]
+    if not matched_game and any(w in question for w in context_triggers) and context["last_game"]:
+        matched_game = context["last_game"]
+
+    if matched_game:
+        context["last_game"] = matched_game
+
+       # Обратный поиск
     if not matched_game:
+        results = []
+        for game in games:
+            for _, target, data in G.edges(game, data=True):
+                rel = data['relation']
+                if target.lower() in question:
+                    results.append((game, rel, target))
+        seen = set()
+        unique = []
+        for game, rel, target in results:
+            key = (game, target)
+            if key not in seen:
+                seen.add(key)
+                unique.append(f"{game} ({rel}: {target})")
+        if unique:
+            return "Нашёл:\n" + "\n".join(unique)
         return "Не знаю такую игру."
 
     buckets = {
@@ -75,7 +100,7 @@ def get_answer(question):
             "Релиз {} состоялся в {}",
             "{} увидела свет в {}"
         ],
-        "сери": [
+        "серия": [
             "{} входит в серию {}",
             "{} — часть франшизы {}",
             "{} относится к серии игр {}"
@@ -92,6 +117,8 @@ def get_answer(question):
             items = buckets[word if word != "платформ" else "платформа"]
             template = random.choice(t_list)
             return template.format(matched_game, ', '.join(items))
+        
+
 
     return "Не понял."
 
