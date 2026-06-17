@@ -39,13 +39,16 @@ def get_answer(question):
     if matched_game:
         context["last_game"] = matched_game
 
-       # Обратный поиск
+    # Обратный поиск
     if not matched_game:
         results = []
         for game in games:
             for _, target, data in G.edges(game, data=True):
                 rel = data['relation']
-                if target.lower() in question:
+                # Составные названия (Nintendo Switch) — ищем в question целиком
+                # Одиночные слова (PC) — только точное совпадение
+                target_words = target.lower().split()
+                if any(tw in words for tw in target_words):
                     results.append((game, rel, target))
         seen = set()
         unique = []
