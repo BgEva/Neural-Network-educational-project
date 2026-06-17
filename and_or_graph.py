@@ -1,3 +1,7 @@
+import matplotlib.pyplot as plt
+import networkx as nx
+
+
 """
 И/ИЛИ-граф для подбора видеоигры
 Входы: 12 признаков (e1-e12)
@@ -135,6 +139,50 @@ def run_scenario(inputs, name):
     print(f"\n>>> Рекомендация: {output_names[sorted_results[0][0]]}")
     return results
 
+
+def visualize_graph():
+    G = nx.DiGraph()
+    
+    for ei, name in input_names.items():
+        G.add_node(ei, label=name, color='#AED6F1')
+    for ri, name in output_names.items():
+        G.add_node(ri, label=name, color='#A9DFBF')
+    
+    for ri, rule in coefficients.items():
+        for ei, ki in rule["and"]:
+            G.add_edge(ei, ri, style='solid')
+        for ei, ki in rule["or"]:
+            G.add_edge(ei, ri, style='dashed')
+    
+    plt.figure(figsize=(20, 14))
+    
+    # Входы слева, выходы справа
+    pos = {}
+    for i, ei in enumerate(input_names):
+        pos[ei] = (0, i * 1.5 - 8)
+    for i, ri in enumerate(output_names):
+        pos[ri] = (6, i * 1.5 - 7)
+    
+    node_colors = ['#AED6F1' if n.startswith('e') else '#A9DFBF' for n in G.nodes()]
+    labels = {n: G.nodes[n]['label'] for n in G.nodes()}
+    
+    nx.draw_networkx_nodes(G, pos, node_size=3000, node_color=node_colors, edgecolors='black', linewidths=1.5)
+    nx.draw_networkx_labels(G, pos, labels, font_size=8, font_weight='bold')
+    
+    solid = [(u, v) for u, v, d in G.edges(data=True) if d['style'] == 'solid']
+    dashed = [(u, v) for u, v, d in G.edges(data=True) if d['style'] == 'dashed']
+    
+    nx.draw_networkx_edges(G, pos, edgelist=solid, edge_color='#2980B9', arrows=True, arrowsize=15, width=2)
+    nx.draw_networkx_edges(G, pos, edgelist=dashed, edge_color='#E74C3C', style='dashed', arrows=True, arrowsize=15, width=2)
+    
+    plt.title("И/ИЛИ-граф подбора видеоигры\nГолубые = Входы | Зелёные = Выходы | Синие = И | Красные пунктир = ИЛИ", fontsize=12)
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig("and_or_graph.png", dpi=150, bbox_inches='tight')
+    print("Граф сохранён в and_or_graph.png")
+    plt.show()
+
+
 # ===== СЦЕНАРИИ =====
 if __name__ == "__main__":
     # Сценарий 1: любитель фэнтези и открытого мира
@@ -161,3 +209,4 @@ if __name__ == "__main__":
     run_scenario(scenario1, "Любитель фэнтези и открытого мира")
     run_scenario(scenario2, "Хардкорный геймер")
     run_scenario(scenario3, "Любитель хорроров")
+    visualize_graph()
